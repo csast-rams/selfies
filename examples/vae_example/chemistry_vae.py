@@ -97,10 +97,11 @@ class VAEEncoder(nn.Module):
         """
         This trick is explained well here:
             https://stats.stackexchange.com/a/16338
+                == scale-location transformation 
         """
-        std = torch.exp(0.5 * log_var)
-        eps = torch.randn_like(std)
-        return eps.mul(std).add_(mu)
+        std = torch.exp(0.5 * log_var) # == sqrt(log_var) =: std dev
+        eps = torch.randn_like(std) # == sample the input tensor 'std' and return equal size tensor of rand. num.
+        return eps.mul(std).add_(mu) # Sampling from scale-location transformation of the OG distro.
 
     def forward(self, x):
         """
